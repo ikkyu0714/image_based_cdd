@@ -374,13 +374,35 @@ class googleimagesdownload:
                     page = page[end_content:]
         return tabs
 
+    """def lookupJsonKey(self, object, s):
+        def lookupImpl(object, s):
+            isDict = False
+            if isinstance(object, dict):
+                isDict = True
+            elif not isinstance(object, list):
+                return None
+            for val in object:
+                if isDict:
+                    if val == s:
+                        return object[val]
+                
+                obj = object[val] if isDict else val
+                ret = lookupImpl(obj, s)
+                if ret != None:
+                    return ret
+            return None
+        return lookupImpl(object, s)"""
+
     # Format the object in readable format
     def format_object(self, object):
         data = object[1]
         main = data[3]
+        #info = self.lookupJsonKey(data, '2003')
         info = data[9]
+        #info = data[23]
         if info is None:
             info = data[11]
+            #info = data[2]
         formatted_object = {}
         try:
             formatted_object['image_height'] = main[2]

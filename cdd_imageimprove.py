@@ -9,10 +9,11 @@ import os, zipfile, requests, argparse, json, urllib, urllib.request, collection
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from PIL import Image
 from tensorflow.python.eager.tape import delete_trace
-from google_images_download_patch.google_images_download.google_images_download import googleimagesdownload
+#from google_images_download_patch.google_images_download.google_images_download import googleimagesdownload
+from google_images_download.google_images_download import googleimagesdownload
 import openpyxl
 import itertools
 import pprint
@@ -235,7 +236,7 @@ class Cultural_Defference_Detector():
         eng_vector = self.median_vector(eng_vector_dict, 'Eng')
 
         print(self.cos_sim(jpn_vector, eng_vector))
-        self.write_result(self.cos_sim(jpn_vector, eng_vector), jpn_keyword, eng_keyword)
+        #self.write_result(self.cos_sim(jpn_vector, eng_vector), jpn_keyword, eng_keyword)
 
         return
 
@@ -277,11 +278,11 @@ class Cultural_Defference_Detector():
 cdd = Cultural_Defference_Detector()
 cdd.get_synset()
 
-for key in range(601,1001): # 1000個一気にやるとメモリ不足になるから100ずつ区切ってやる
+for key in range(1,2): # 1000個一気にやるとメモリ不足になるから100ずつ区切ってやる
     print('========================================')
     print('ID:{},キーワード:{}'.format(key,cdd.jpn_keyword_dict[key]))
     print('========================================')
-    #cdd.image_confirm(key)
+    cdd.image_confirm(key)
     #cdd.folder_confirm(os.path.join(cdd.new_dir_path, cdd.jpn_keyword_dict[key]))
     #cdd.folder_confirm(os.path.join(cdd.new_dir_path, cdd.eng_keyword_dict[key]))
     cdd.cd_detect(cdd.jpn_keyword_dict[key], cdd.eng_keyword_dict[key])
