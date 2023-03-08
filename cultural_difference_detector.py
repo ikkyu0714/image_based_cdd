@@ -266,6 +266,18 @@ class Cultural_Difference_Detector():
 
         return self.weighted_average(data, self.weight_list_get(labels))
 
+    def euclidean(self, vector_dict):
+        data = self.vector_list_get(vector_dict)
+        for vector_list in vector_dict.values():
+            for vector in vector_list:
+                print('---------------------------------')
+                print(vector)
+                if vector[0] == 'ring finger annualry/ring finger annualry/2.ring_finger.png':
+                    print('**********{}'.format(vector[1]))
+        
+        for vector_pair in itertools.combinations(data, 2):
+            print('ベクトル{}とベクトル{}の距離は{}'.format(vector_pair[0], vector_pair[1], np.linalg.norm(vector_pair[0]-vector_pair[1])))
+
     #マハラノビス距離を計算
     def mahalanobis(self, data):
         # データ集合の平均値mean, データ集合の共分散行列(分散を集めたもの)cov
@@ -379,6 +391,10 @@ class Cultural_Difference_Detector():
             elif detect_model == 'Isolation':
                 jpn_vector = self.isolation(jpn_vector_dict)
                 eng_vector = self.isolation(eng_vector_dict)
+
+            elif detect_model == 'Euclidean':
+                jpn_vector = self.euclidean(jpn_vector_dict)
+                eng_vector = self.euclidean(eng_vector_dict)
 
             elif detect_model == '重心':
                 jpn_vector = self.median_vector(jpn_vector_dict, 'Jpn')
@@ -645,15 +661,15 @@ class Cultural_Difference_Detector():
 
         return feature_vector_average_dict"""
 
-detect_model = ['Avg', 'Kmeans', 'predict', 'Isolation', 'mahalanobis', 'DBSCAN', 'Kmeans-outlier']
+detect_model = ['Avg', 'Kmeans', 'predict', 'Isolation', 'mahalanobis', 'DBSCAN', 'Kmeans-outlier', 'Euclidean']
 cdd = Cultural_Difference_Detector()
 cdd.get_synset()
 
-for key in range(231, 232): # 1000個一気にやるとメモリ不足になるから100ずつ区切ってやる
+for key in range(649, 650): # 1000個一気にやるとメモリ不足になるから100ずつ区切ってやる
     print('========================================')
     print('ID:{},キーワード:{}'.format(key, cdd.jpn_keyword_dict[key]))
     print('========================================')
     #cdd.image_confirm(key)
     #cdd.folder_confirm(os.path.join(cdd.new_dir_path, cdd.jpn_keyword_dict[key]))
     #cdd.folder_confirm(os.path.join(cdd.new_dir_path, cdd.eng_keyword_dict[key]))
-    cdd.cd_detect(cdd.jpn_keyword_dict[key], cdd.eng_keyword_dict[key], detect_model[2])
+    cdd.cd_detect(cdd.jpn_keyword_dict[key], cdd.eng_keyword_dict[key], detect_model[7])
