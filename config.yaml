@@ -1,0 +1,53 @@
+data:
+  synset_file: "synset_改良.xlsx"
+  download_dir: "downloads"
+
+  # 処理するSynset ID
+  start_id: 1
+  end_id: 1
+
+
+search:
+  # keywordだけでなく
+  # "keyword + hypernym" でも画像検索する
+  use_hypernyms: true
+
+  # 1検索クエリあたりの画像枚数
+  images_per_query: 10
+
+
+feature:
+  model: "vgg16"
+
+  # VGG16への入力画像サイズ
+  image_size:
+    - 224
+    - 224
+
+  # 元コードのグレースケール処理を使用するか
+  grayscale: false
+
+
+analysis:
+  # 実行する代表ベクトル生成方法
+  methods:
+    - average
+    - centroid_of_centroids
+    - kmeans
+    - dbscan
+    - isolation_forest
+
+  # KMeans
+  kmeans_clusters: 2
+
+  # DBSCAN
+  dbscan_eps: 1000.0
+  dbscan_min_samples: 2
+
+  # Isolation Forest
+  isolation_contamination: "auto"
+  random_state: 42
+
+
+output:
+  result_file: "results/cultural_difference.csv"
