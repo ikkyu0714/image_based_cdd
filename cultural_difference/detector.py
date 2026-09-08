@@ -7,7 +7,7 @@ import numpy as np
 from cultural_difference import aggregators
 from cultural_difference.config import Config
 from cultural_difference.feature_extractor import VGG16FeatureExtractor
-from cultural_difference.image_downloader import GoogleImageDownloader
+from cultural_difference.image_downloader import ImageDownloader
 from cultural_difference.metrics import (
     cosine_distance,
     cosine_similarity,
@@ -20,7 +20,7 @@ from cultural_difference.synset_repository import SynsetEntry
 class CulturalDifferenceDetector:
     def __init__(
         self,
-        image_downloader: GoogleImageDownloader,
+        image_downloader: ImageDownloader,
         feature_extractor: VGG16FeatureExtractor,
         result_writer: CsvResultWriter,
         config: Config,

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import re
+import shutil
+
 from pathlib import Path
 
-from google_images_download.google_images_download import googleimagesdownload
+from imagedl.modules.sources import BingImageClient
 
 
-class GoogleImageDownloader:
+class ImageDownloader:
+
     def __init__(
         self,
         download_dir: str | Path,
@@ -21,6 +24,41 @@ class GoogleImageDownloader:
             parents=True,
             exist_ok=True,
         )
+
+    def _flatten_download_directory(
+        self,
+        output_dir: Path,
+    ) -> None:
+        bing_dir = output_dir / "BingImageClient"
+
+        if not bing_dir.exists():
+            return
+
+        valid_extensions = {
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".bmp",
+            ".webp",
+        }
+
+        for image_path in bing_dir.rglob("*"):
+            if not image_path.is_file():
+                continue
+
+            if image_path.suffix.lower() not in valid_extensions:
+                continue
+
+            destination = output_dir / image_path.name
+
+            counter = 1
+            while destination.exists():
+                destination = output_dir / f"{image_path.stem}_{counter}{image_path.suffix}"
+                counter += 1
+
+            image_path.rename(destination)
+
+        shutil.rmtree(bing_dir)
 
     def download_language_images(
         self,
@@ -92,19 +130,23 @@ class GoogleImageDownloader:
         output_dir: Path,
         limit: int,
     ) -> None:
-        downloader = googleimagesdownload()
-
-        arguments = {
-            "keywords": query,
-            "limit": limit,
-            "format": "jpg",
-            "output_directory": str(output_dir.parent),
-            "image_directory": output_dir.name,
-            "silent_mode": True,
-        }
+        client = BingImageClient(
+            work_dir=str(output_dir),
+        )
 
         try:
-            downloader.download(arguments)
+            image_infos = client.search(
+                query,
+                search_limits=limit,
+                num_threadings=1,
+            )
+
+            client.download(
+                image_infos,
+                num_threadings=1,
+            )
+
+            self._flatten_download_directory(output_dir)
 
         except Exception as error:
             print(f"[Warning] Failed to download " f"images for '{query}': {error}")

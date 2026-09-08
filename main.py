@@ -5,7 +5,7 @@ import argparse
 from cultural_difference.config import load_config
 from cultural_difference.detector import CulturalDifferenceDetector
 from cultural_difference.feature_extractor import VGG16FeatureExtractor
-from cultural_difference.image_downloader import GoogleImageDownloader
+from cultural_difference.image_downloader import ImageDownloader
 from cultural_difference.result_writer import CsvResultWriter
 from cultural_difference.synset_repository import SynsetRepository
 
@@ -26,7 +26,7 @@ def main() -> None:
 
     synset_repository = SynsetRepository(config.data.synset_file)
 
-    image_downloader = GoogleImageDownloader(
+    image_downloader = ImageDownloader(
         download_dir=config.data.download_dir,
         images_per_query=config.search.images_per_query,
         use_hypernyms=config.search.use_hypernyms,

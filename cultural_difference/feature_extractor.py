@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 from keras.applications.vgg16 import VGG16
 from keras.applications.vgg16 import preprocess_input
-from keras.preprocessing import image
+from keras.utils import load_img, img_to_array
 
 
 class VGG16FeatureExtractor:
@@ -77,12 +77,12 @@ class VGG16FeatureExtractor:
         if self.grayscale:
             input_image = self._load_grayscale_image(image_path)
         else:
-            input_image = image.load_img(
+            input_image = load_img(
                 image_path,
                 target_size=self.image_size,
             )
 
-            input_image = image.img_to_array(input_image)
+            input_image = img_to_array(input_image)
 
         input_batch = np.expand_dims(
             input_image,
